@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "374914674941",
+    "project_id": "apphackagro",
+    "storage_bucket": "apphackagro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374914674941:android:cb89e90bb75f0e22face94",
+        "android_client_info": {
+          "package_name": "com.example.apphackagrosebraeba"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374914674941-qng3ng9vqr73kpv07h0geoq3pvgvjjm2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLidUxCmqU-C4FoGWSg_KDL7xcTvNynfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374914674941-qng3ng9vqr73kpv07h0geoq3pvgvjjm2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
