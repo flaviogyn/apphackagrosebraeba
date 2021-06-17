@@ -3,9 +3,9 @@ import 'package:apphackagrosebraeba/utils/app_routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProductGrid extends StatelessWidget {
+class TransacaoGrid extends StatelessWidget {
   final String tipoUsuario;
-  const ProductGrid(this.tipoUsuario);
+  const TransacaoGrid(this.tipoUsuario);
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +14,9 @@ class ProductGrid extends StatelessWidget {
     Firestore db = Firestore.instance;
 
     Stream<QuerySnapshot> _adicionarListenerRequisicoes(){
-      final stream = db.collection("produtos")
-          .orderBy("categoria")
+      final stream = db.collection("transacao")
+          .where("tipoUsuario", isEqualTo: tipoUsuario)
+          .orderBy("entrega")
           .snapshots();
 
       stream.listen((dados){
@@ -28,7 +29,7 @@ class ProductGrid extends StatelessWidget {
 
     var mensagemNaoTemDados = Center(
       child: Text(
-        "Não existe produtos cadastrados! :(",
+        "Não existe transacao cadastrados! :(",
         style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold
@@ -36,7 +37,17 @@ class ProductGrid extends StatelessWidget {
       ),
     );
 
-    return StreamBuilder<QuerySnapshot>(
+    _recuperarProduto(idProduto) async {
+      Firestore db = Firestore.instance;
+      DocumentSnapshot documentSnapshot = await db
+          .collection("produtos")
+          .document( idProduto )
+          .get();
+
+      return documentSnapshot;
+    }
+
+    return StreamBuilder<QuerySnapshot> (
       stream: _controller.stream,
       builder: (ctx, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -52,13 +63,26 @@ class ProductGrid extends StatelessWidget {
             itemCount: querySnapshot.documents.length,
             itemBuilder: (ctx, i) {
 
-            List<DocumentSnapshot> produtos = querySnapshot.documents.toList();
-            DocumentSnapshot item = produtos[i];
+            List<DocumentSnapshot> transacao = querySnapshot.documents.toList();
+            DocumentSnapshot item = transacao[i];
 
-            String id = '10'; // item["id"];
-            String imageUrl = item["imageUrl"];
+            String _id = '0';
+            String _idUsuario = item["idUsuario"];;
+            String _status = item["status"];
+            String _tipo = item["tipo"];
+            double _preco = item["preco"];
+            DateTime _entrega = item["entrega"];
+            int _quantidade = item["quantidade"];
+            String local = item["local"];
+
+            String _idProduto = item["idProduto"];
+            final produtoSnapshot = _recuperarProduto(_idProduto);
+
+            String imageUrl = produtoSnapshot.imageUrl;
             String title = item["title"];
             bool isFavorite = item["isFavorite"];
+
+            String id = '10'; // item["id"];
 
               return ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -80,7 +104,7 @@ class ProductGrid extends StatelessWidget {
                     ),
                   ),
                   footer: GridTileBar(
-                    backgroundColor: Colors.black87,
+                    backgroundColor: tipoUsuario == 'produtor' ? Colors.black87 : Colors.green,
                     leading: IconButton(
                         icon: Icon(
                             isFavorite ? Icons.favorite : Icons.favorite_border),

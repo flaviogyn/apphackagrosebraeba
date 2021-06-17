@@ -1,0 +1,1 @@
+String TIPO_USUARIO;

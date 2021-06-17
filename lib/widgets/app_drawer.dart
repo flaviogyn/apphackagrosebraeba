@@ -1,3 +1,4 @@
+import 'package:apphackagrosebraeba/utils/contants.dart';
 import 'package:flutter/material.dart';
 import '../utils/app_routes.dart';
 
@@ -14,9 +15,10 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.shop),
-            title: Text('Loja'),
+            title: Text('Painel Ofertas/Demandas'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.AUTH_HOME);
+              //TODO: passa o tipo do usuario
+              Navigator.of(context).pushReplacementNamed(AppRoutes.PAINEL, arguments: TIPO_USUARIO);
             },
           ),
           Divider(),
@@ -33,7 +35,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.edit),
-            title: Text('Gerenciar Produtos'),
+            title: Text('Lista Produtos'),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoutes.PRODUCTS);
             },

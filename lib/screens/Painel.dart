@@ -1,3 +1,4 @@
+import 'package:apphackagrosebraeba/widgets/transacao_grid.dart';
 import 'package:flutter/material.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
@@ -10,31 +11,35 @@ enum FilterOptions {
 }
 
 class PainelScreen extends StatefulWidget {
+  final String tipoUsuario;
+  PainelScreen(this.tipoUsuario);
+
   @override
-  _PainelScreenState createState() => _PainelScreenState();
+  _PainelScreenState createState() => _PainelScreenState(tipoUsuario);
 }
 
 class _PainelScreenState extends State<PainelScreen> {
+  final String tipoUsuario;
+  _PainelScreenState(this.tipoUsuario);
+
   bool _showFavoriteOnly = false;
   bool _isLoading = true;
+  int _countCart = 0;
 
   @override
   void initState() {
     super.initState();
-    // Provider.of<Products>(context, listen: false).loadProducts().then((_) {
       setState(() {
         _isLoading = false;
       });
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    // final Products products = Provider.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Meu Controle'),
+        title: Text('Painel Ofertas/Demandas'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {
@@ -51,7 +56,7 @@ class _PainelScreenState extends State<PainelScreen> {
             icon: Icon(Icons.more_vert),
             itemBuilder: (_) => [
               PopupMenuItem(
-                child: Text('Somente Favoritos'),
+                child: Text('Somente Ofertas'),
                 value: FilterOptions.Favorite,
               ),
               PopupMenuItem(
@@ -59,6 +64,15 @@ class _PainelScreenState extends State<PainelScreen> {
                 value: FilterOptions.All,
               ),
             ],
+          ),
+          Badge(
+              value: _countCart.toString(),
+              child: IconButton(
+              icon: Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppRoutes.CART);
+              },
+            ),
           ),
           // Consumer<Cart>(
           //   child: IconButton(
@@ -77,7 +91,7 @@ class _PainelScreenState extends State<PainelScreen> {
       // body: _isLoading ? Center(
       //   child: CircularProgressIndicator(),
       // ) : ProductGrid(_showFavoriteOnly),
-      body: ProductGrid(_showFavoriteOnly),
+      body: TransacaoGrid(tipoUsuario),
       drawer: AppDrawer(),
     );
   }

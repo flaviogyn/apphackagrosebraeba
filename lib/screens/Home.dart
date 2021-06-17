@@ -1,4 +1,6 @@
+import 'package:apphackagrosebraeba/screens/Painel.dart';
 import 'package:apphackagrosebraeba/utils/app_routes.dart';
+import 'package:apphackagrosebraeba/utils/contants.dart';
 import 'package:flutter/material.dart';
 import 'package:apphackagrosebraeba/model/Usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +26,7 @@ class _HomeState extends State<Home> {
     //validar campos
     if( email.isNotEmpty && email.contains("@") ){
 
-      if( senha.isNotEmpty && senha.length > 6 ){
+      if( senha.isNotEmpty && senha.length > 5 ){
 
         Usuario usuario = Usuario();
         usuario.email = email;
@@ -58,6 +60,8 @@ class _HomeState extends State<Home> {
         password: usuario.senha
     ).then((firebaseUser){
 
+      print(firebaseUser.user.uid);
+
       _redirecionaPainelPorTipoUsuario( firebaseUser.user.uid );
 
     }).catchError((error){
@@ -75,11 +79,19 @@ class _HomeState extends State<Home> {
 
     Map<String, dynamic> dados = snapshot.data;
     String tipoUsuario = dados["tipoUsuario"];
-
+    TIPO_USUARIO = tipoUsuario;
+    
     setState(() {
       _carregando = false;
     });
-    Navigator.pushReplacementNamed(context, AppRoutes.PAINEL);
+
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PainelScreen(tipoUsuario),
+        ),
+    );
+
   }
 
   _verificarUsuarioLogado() async {

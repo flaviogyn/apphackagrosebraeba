@@ -25,7 +25,7 @@ void main() => runApp(MaterialApp(
   routes: {
     AppRoutes.HOME: (ctx) => Home(),
     AppRoutes.CADASTRO: (ctx) => Cadastro(),
-    AppRoutes.PAINEL: (ctx) => PainelScreen(),
+    AppRoutes.PAINEL: (ctx) => PainelScreen('produtor'),
     // AppRoutes.CART: (ctx) => CartScreeen(),
     // AppRoutes.ORDERS: (ctx) => OrdersScreen(),
     // AppRoutes.PRODUCTS: (ctx) => ProductsScreen(),
