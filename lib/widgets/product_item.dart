@@ -1,13 +1,10 @@
-import 'package:apphackagrosebraeba/model/Produto.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:shop/exceptions/http_exception.dart';
-// import '../providers/product.dart';
-// import '../providers/products.dart';
 import '../utils/app_routes.dart';
 
 class ProductItem extends StatelessWidget {
-  final Produto product;
+  // final Produto product;
+  final DocumentSnapshot product;
 
   ProductItem(this.product);
 
@@ -17,10 +14,10 @@ class ProductItem extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
-          product.imageUrl,
+          product["imageUrl"],
         ),
       ),
-      title: Text(product.title),
+      title: Text(product["title"] + "\n Preço Médio: " + product["price"].toString()),
       trailing: Container(
         width: 100,
         child: Row(

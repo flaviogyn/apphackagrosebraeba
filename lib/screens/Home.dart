@@ -116,7 +116,7 @@ class _HomeState extends State<Home> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/fundo.jpg"),
+              image: AssetImage("assets/images/fundo.png"),
               fit: BoxFit.cover
           )
         ),
@@ -127,12 +127,7 @@ class _HomeState extends State<Home> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(bottom: 32),
-                  child: Image.asset(
-                      "assets/images/produtor.jpg",
-                    width: 200,
-                    height: 150,
-                  ),
+                  padding: EdgeInsets.only(bottom: 50),
                 ),
                 TextField(
                   controller: _controllerEmail,

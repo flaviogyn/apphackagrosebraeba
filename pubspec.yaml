@@ -66,7 +66,8 @@ flutter:
     - assets/images/destino.png
     - assets/images/comprador.jpg
     - assets/images/produtor.jpg
-
+    - assets/images/product-placeholder.jpg
+    - assets/images/splash.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

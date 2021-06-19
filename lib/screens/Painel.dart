@@ -39,7 +39,7 @@ class _PainelScreenState extends State<PainelScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Painel Ofertas/Demandas'),
+        title: Text('Ofertas/Demandas'),
         actions: <Widget>[
           PopupMenuButton(
             onSelected: (FilterOptions selectedValue) {

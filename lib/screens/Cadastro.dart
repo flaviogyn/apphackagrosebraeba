@@ -73,6 +73,8 @@ class _CadastroState extends State<Cadastro> {
         password: usuario.senha
     ).then((firebaseUser){
 
+      usuario.idUsuario = firebaseUser.user.uid;
+      
       db.collection("usuarios")
           .document( firebaseUser.user.uid )
           .setData( usuario.toMap() );

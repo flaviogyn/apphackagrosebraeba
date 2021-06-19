@@ -1,6 +1,8 @@
 import 'package:apphackagrosebraeba/screens/Cadastro.dart';
 import 'package:apphackagrosebraeba/screens/Home.dart';
 import 'package:apphackagrosebraeba/screens/Painel.dart';
+import 'package:apphackagrosebraeba/screens/Produto.dart';
+import 'package:apphackagrosebraeba/screens/Splash.dart';
 import 'package:apphackagrosebraeba/utils/app_routes.dart';
 import 'package:apphackagrosebraeba/utils/custom_route.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +18,18 @@ final ThemeData temaPadrao = ThemeData(
     }
   )
 );
-
 void main() => runApp(MaterialApp(
   title: "Hack Agro FarmPlus",
-  home: Home(),
+  home: SplashPage(),
   theme: temaPadrao,
   debugShowCheckedModeBanner: false,
   routes: {
     AppRoutes.HOME: (ctx) => Home(),
     AppRoutes.CADASTRO: (ctx) => Cadastro(),
     AppRoutes.PAINEL: (ctx) => PainelScreen('produtor'),
+    AppRoutes.PRODUCTS: (ctx) => ProdutoScreen(),
     // AppRoutes.CART: (ctx) => CartScreeen(),
     // AppRoutes.ORDERS: (ctx) => OrdersScreen(),
-    // AppRoutes.PRODUCTS: (ctx) => ProductsScreen(),
     // AppRoutes.PRODUCT_FORM: (ctx) => ProductFormScreeen(),
   },
 

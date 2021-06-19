@@ -50,5 +50,4 @@ class Produto  {
 
   set isFavorite( value) => this._isFavorite = value;
 
-
 }

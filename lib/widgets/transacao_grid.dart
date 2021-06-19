@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:apphackagrosebraeba/utils/app_routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:apphackagrosebraeba/utils/UsuarioFirebase.dart';
 
 class TransacaoGrid extends StatelessWidget {
   final String tipoUsuario;
@@ -13,19 +15,28 @@ class TransacaoGrid extends StatelessWidget {
     final _controller = StreamController<QuerySnapshot>.broadcast();
     Firestore db = Firestore.instance;
 
-    Stream<QuerySnapshot> _adicionarListenerRequisicoes(){
+    _recuperaIdUsuariologado() async {
+      // Usuario usuario = await UsuarioFirebase.getDadosUsuarioLogado();
+      FirebaseUser firebaseUser = await UsuarioFirebase.getUsuarioAtual();
+      return firebaseUser.uid;
+    }
+
+    Future<Stream<QuerySnapshot>> _adicionarListener() async {
+      final idUsuario = await _recuperaIdUsuariologado();
+      print("idUsuario:");
+      print(idUsuario);
+
       final stream = db.collection("transacao")
-          .where("tipoUsuario", isEqualTo: tipoUsuario)
-          .orderBy("entrega")
+          // .where("idUsuario", isEqualTo: idUsuario)
+          .orderBy("tipo")
           .snapshots();
 
       stream.listen((dados){
-        print(dados);
         _controller.add( dados );
       });
     }
 
-    _adicionarListenerRequisicoes();
+    _adicionarListener();
 
     var mensagemNaoTemDados = Center(
       child: Text(
@@ -37,7 +48,7 @@ class TransacaoGrid extends StatelessWidget {
       ),
     );
 
-    _recuperarProduto(idProduto) async {
+    Future<DocumentSnapshot> _recuperarProduto(idProduto) async {
       Firestore db = Firestore.instance;
       DocumentSnapshot documentSnapshot = await db
           .collection("produtos")
@@ -66,71 +77,101 @@ class TransacaoGrid extends StatelessWidget {
             List<DocumentSnapshot> transacao = querySnapshot.documents.toList();
             DocumentSnapshot item = transacao[i];
 
-            String _id = '0';
-            String _idUsuario = item["idUsuario"];;
-            String _status = item["status"];
-            String _tipo = item["tipo"];
-            double _preco = item["preco"];
-            DateTime _entrega = item["entrega"];
-            int _quantidade = item["quantidade"];
+            String id = '0';
+            String idUsuario = item["idUsuario"];
+            String status = item["status"];
+            String tipo = item["tipo"];
+            double preco = item["preco"];
+            // String entrega = item["entrega"].toString();
+            int quantidade = item["quantidade"];
             String local = item["local"];
 
             String _idProduto = item["idProduto"];
-            final produtoSnapshot = _recuperarProduto(_idProduto);
-
-            String imageUrl = produtoSnapshot.imageUrl;
+            print("idProduto:");
+            print(_idProduto);
+            
+            String imageUrl = item["imageUrl"];
             String title = item["title"];
             bool isFavorite = item["isFavorite"];
 
-            String id = '10'; // item["id"];
+            /*
+            // DocumentSnapshot produtoSnapshot;
+            _recuperarProduto(_idProduto).then((produtoSnapshot) async {
 
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: GridTile(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                        AppRoutes.PRODUCT_DETAIL,
-                        arguments: item, //product
-                      );
-                    },
-                    child: Hero(
-                      tag: id,
-                      child: FadeInImage(
-                        placeholder: AssetImage('assets/images/product-placeholder.png'),
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  footer: GridTileBar(
-                    backgroundColor: tipoUsuario == 'produtor' ? Colors.black87 : Colors.green,
-                    leading: IconButton(
-                        icon: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border),
-                        color: Theme.of(context).accentColor,
-                        onPressed: () {
-                          // marca como favorito
-                          // product.toggleFavorite(auth.token, auth.userId);
-                        },
-                      ),
-                    title: Text(
-                      title,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              );
+              print("recupera produtoSnapshot");
+
+              imageUrl = produtoSnapshot.data["imageUrl"];
+              title = produtoSnapshot.data["title"];
+              isFavorite = produtoSnapshot.data["isFavorite"];
+
+              print("dentro recupera " + DateTime.now().toString());
+              print(imageUrl);
+              print(title);
+              print(isFavorite);
+              print(tipo);
+
+            });
+            */
+            
+            return buildClipRRect(context, item, id, imageUrl, tipo, isFavorite, title);
+            
             },
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 3 / 2,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
-          ));
+          ),
+          );
         }
       },
     );
   
+  }
+
+  ClipRRect buildClipRRect(BuildContext context, DocumentSnapshot item, String id, String imageUrl, String tipo, bool isFavorite, String title)  {
+    // print("dentro " + DateTime.now().toString());
+    // print(imageUrl);
+    // print(title);
+    // print(isFavorite);
+    // print(tipo);
+
+    return ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: GridTile(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      AppRoutes.PRODUCT_DETAIL,
+                      arguments: item, //product
+                    );
+                  },
+                  child: Hero(
+                    tag: id,
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/images/product-placeholder.jpg'),
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                footer: GridTileBar(
+                  backgroundColor: tipo == 'Demanda' ? Colors.black87 : Colors.green,
+                  leading: IconButton(
+                      icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border),
+                      color: Theme.of(context).accentColor,
+                      onPressed: () {
+                        // marca como favorito
+                        // product.toggleFavorite(auth.token, auth.userId);
+                      },
+                    ),
+                  title: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            );
   }
 }

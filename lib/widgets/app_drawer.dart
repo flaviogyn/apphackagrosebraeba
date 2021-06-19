@@ -1,4 +1,6 @@
+import 'package:apphackagrosebraeba/screens/Produto.dart';
 import 'package:apphackagrosebraeba/utils/contants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../utils/app_routes.dart';
 
@@ -15,9 +17,8 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.shop),
-            title: Text('Painel Ofertas/Demandas'),
+            title: Text('Ofertas/Demandas'),
             onTap: () {
-              //TODO: passa o tipo do usuario
               Navigator.of(context).pushReplacementNamed(AppRoutes.PAINEL, arguments: TIPO_USUARIO);
             },
           ),
@@ -37,16 +38,19 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.edit),
             title: Text('Lista Produtos'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoutes.PRODUCTS);
+              Navigator.pushReplacementNamed(
+                  context,
+                  AppRoutes.PRODUCTS
+              );
             },
           ),
           Divider(),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Sair'),
-            onTap: () {
-              // Provider.of<Auth>(context, listen: false).logout();
-              // TODO: Fazer fechamento do app
+            onTap: () async {
+              final FirebaseAuth _auth = FirebaseAuth.instance;
+              await _auth.signOut().then((value) => Navigator.of(context).pushReplacementNamed(AppRoutes.HOME));
             },
           ),
         ],
